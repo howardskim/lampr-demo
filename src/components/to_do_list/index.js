@@ -3,6 +3,7 @@ import axios from 'axios';
 import Item from './item';
 import Input from './input';
 import './list.css';
+import {formatPostData} from '../../helpers';
 
 class ToDoList extends Component {
     constructor(props) {
@@ -24,13 +25,49 @@ class ToDoList extends Component {
         this.deleteItem = this.deleteItem.bind(this);
     }
 
-    componentWillMount() {
+    //initially comment out getListData
+
+    async componentWillMount() {
         this.getListData();
+        
+        //it automatically adds the http://
+        //don't concatenate otherwise it will show as [object, object]
+        //we cannot leave our code to localhost.. if we run our AWS server it wont work
+        //once we're on, our apache won't be running on port 8000... that would be incorrect
+        // const dataToSend = formatPostData ({
+        //     message: 'Hello from the frontend',
+        //     favColor: 'BLUE',
+        //     birthday: '1/2/34'
+        // })
+        //post takes a second argument which is the object we created up there called dataToSend but it doesn't work... 
+
+        // const params = new URLSearchParams();
+        // params.append('message', 'Hello from the frontend');
+        // params.append('favColor', 'BLUE');
+        // params.append('birthday', '1/2/34');
+        
+
+        //[REQUEST_METHOD] => DELETE OR PATCH, ETC this is for a Restful API 
+
+
+       
     }
+    // go to network tab > then todos.php > response tab should show 
+    // <pre>Array
+    // (
+    //     [some] => value
+    //     [name] => Bob
+    //     [age] => 67
+    // )
+    // </pre >
 
     async getListData() {
         // Use get request to get list data
-        const response = { data: {}}; // Remove
+        const response = await axios.get('/api/todos.php?', {
+            params: {
+                action: 'get_all_todos'
+            }
+        }); // Remove
 
         const { message, listItems } = response.data;
 
